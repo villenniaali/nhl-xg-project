@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NHL Game Data</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>NHL Game Data</h1>
+    <form method="post">
+        <label for="game_id">Enter Game ID:</label>
+        <input type="text" id="game_id" name="game_id" value="{{ game_id }}" required>
+        <button type="submit">Submit</button>
+    </form>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    {% if data %}
+        <h2>Game ID: {{ game_id }}</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Period</th>
+                    <th>Time</th>
+                    <th>X</th>
+                    <th>Y</th>
+                    <th>Type</th>
+                    <th>Team</th>
+                    <th>Result</th>
+                    <th>Time Since Last Event (seconds)</th>
+                    <th>Last Event Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                    <tr>
+                        <td>{{ row.period }}</td>
+                        <td>{{ row.time }}</td>
+                        <td>{{ row.x }}</td>
+                        <td>{{ row.y }}</td>
+                        <td>{{ row.type }}</td>
+                        <td>{{ row.team }}</td>
+                        <td>{{ row.result }}</td>
+                        <td>{{ row.time_since_last_event_seconds }}</td>
+                        <td>{{ row.last_event_type }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</body>
+</html>
