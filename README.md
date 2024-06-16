@@ -1,85 +1,115 @@
 
-# Dockerized NHL Expected Goals (xG) Project
+# NHL XG Project
 
-This project dockerizes a Flask application that analyzes NHL play-by-play data to calculate expected goals (xG) based on shot events during games.
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Setup](#setup)
-  - [Prerequisites](#prerequisites)
-  - [Building the Docker Image](#building-the-docker-image)
-  - [Running the Docker Container](#running-the-docker-container)
-- [Usage](#usage)
-- [Built With](#built-with)
-- [Authors](#authors)
-- [License](#license)
-- [Acknowledgments](#acknowledgments)
+This project retrieves and analyzes NHL play-by-play data to calculate expected goals (xG) for each shot event.
 
 ## Overview
 
-This project dockerizes a Flask application that retrieves NHL game data from the NHL API and processes shot events to calculate expected goals (xG). The Docker container encapsulates all dependencies and environment configurations, making it easy to deploy and run the application consistently across different environments.
+The NHL XG Project fetches play-by-play data from the NHL API, processes shot events (goals, shots on goal, missed shots), calculates xG values, and provides insights into team performance based on shot locations and types.
+
+## Requirements
+
+- Python 3.9+
+- Flask
+- Requests
+- Pandas
 
 ## Setup
-
-Follow these steps to set up and run the Dockerized application.
-
-### Prerequisites
-
-- Docker installed on your system ([Install Docker](https://docs.docker.com/get-docker/))
-
-### Building the Docker Image
 
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/villenniaali/nhl-xg-project.git
+   git clone https://github.com/yourusername/nhl-xg-project.git
    cd nhl-xg-project
    ```
 
-2. **Build the Docker image:**
+2. **Install dependencies:**
 
    ```bash
-   docker build -t nhl-xg-project .
+   pip install -r requirements.txt
    ```
-
-   This command builds a Docker image named `nhl-xg-project` based on the `Dockerfile` in the project directory.
-
-### Running the Docker Container
-
-1. **Run the Docker container:**
-
-   ```bash
-   docker run -p 5000:5000 nhl-xg-project
-   ```
-
-   This command starts a Docker container based on the `nhl-xg-project` image, exposing port 5000 for the Flask application.
-
-2. **Access the application:**
-
-   Open your web browser and navigate to http://localhost:5000 to view the application.
 
 ## Usage
 
-- Enter a valid NHL game ID to retrieve play-by-play data.
-- View shot events (goals, shots on goal, missed shots) with additional details such as coordinates and time since the last event.
+### Running Locally
 
-## Built With
+To run the project locally:
 
-- [Flask](https://flask.palletsprojects.com/) - Python web framework
-- [Pandas](https://pandas.pydata.org/) - Data manipulation and analysis
-- [Requests](https://docs.python-requests.org/) - HTTP requests handling
-- [Docker](https://www.docker.com/) - Containerization platform
+```bash
+python app.py
+```
 
-## Authors
+The application will start locally and can be accessed at `http://localhost:5000`.
 
-- [Ville Sainio](https://github.com/villenniaali) - Initial work
+### Docker
+
+#### Building the Docker Image
+
+To build the Docker image using the provided Dockerfile:
+
+```bash
+docker build -t nhl-xg-project .
+```
+
+##### Explanation of Dockerfile
+
+The Dockerfile sets up the environment for running the NHL XG Project in a Docker container using Ubuntu 20.04:
+
+```dockerfile
+# Dockerfile
+
+# Use Ubuntu 20.04 as the base image
+FROM ubuntu:20.04
+
+# Update packages and install Python 3 and pip
+RUN apt-get update \
+    && apt-get install -y \
+        python3 \
+        python3-pip \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
+
+# Copy and install Python dependencies
+COPY requirements.txt requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the application code
+COPY . .
+
+# Expose port if needed
+EXPOSE 5000
+
+# Command to run the application
+CMD ["python3", "app.py"]
+```
+
+#### Running the Docker Container
+
+Once the Docker image is built, you can run the container with:
+
+```bash
+docker run -p 5000:5000 nhl-xg-project
+```
+
+The application will be accessible at `http://localhost:5000`.
+
+## Project Structure
+
+- `app.py`: Flask application to fetch and analyze NHL play-by-play data.
+- `requirements.txt`: List of Python dependencies.
+- `nhl_teams.json`: JSON file containing NHL team data.
+
+## Contributing
+
+Contributions are welcome! Please fork the repository and submit pull requests for any enhancements, bug fixes, or new features.
+
+## Issues
+
+If you encounter any issues or have suggestions, please [create an issue](https://github.com/villenniaali/nhl-xg-project/issues) on GitHub.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- NHL API for providing game data
-- OpenAI for providing guidance on project structure
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
